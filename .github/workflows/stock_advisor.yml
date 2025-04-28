@@ -51,7 +51,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           # Install the src/ package in editable mode so `stock_advisor` is importable
-          pip install -e ./src
 
       # Optional lint/test block – enable when ready
       #- name: Lint & test
