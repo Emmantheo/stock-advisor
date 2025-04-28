@@ -60,4 +60,4 @@ jobs:
       #    pytest
 
       - name: Run the Stock Advisor agent
-        run: python -m main
+        run: python -m stock_advisor.main
