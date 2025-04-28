@@ -1,0 +1,17 @@
+# ------------ requirements.txt ------------
+# Core LLM + agent framework
+langchain>=0.1.15
+openai>=1.25.0
+
+# NLP / sentiment
+transformers>=4.40.0
+
+# Market data & HTTP
+yfinance>=0.2.37
+requests>=2.31.0
+
+# Scheduling helper
+schedule>=1.2.0
+
+# yfinance ➜ pandas dependency (explicit pin avoids old CSV parser bug)
+pandas>=2.2.0
