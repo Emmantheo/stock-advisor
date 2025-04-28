@@ -1,6 +1,8 @@
 # ------------ requirements.txt ------------
 # Core LLM + agent framework
-langchain>=0.1.15
+langchain-core>=0.3.56
+langchain-community>=0.0.27
+langchain-openai>=0.1.9
 openai>=1.25.0
 
 # NLP / sentiment
