@@ -5,6 +5,11 @@ langchain-community>=0.0.27
 langchain-openai>=0.1.9
 openai>=1.25.0
 
+# CPU‑only build of PyTorch so FinBERT can run inference.
+# Wheels are large but work out‑of‑the‑box on GH‑Actions.
+torch>=2.2.2
+
+tiktoken>=0.6.0
 # NLP / sentiment
 transformers>=4.40.0
 
