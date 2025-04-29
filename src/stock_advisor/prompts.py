@@ -24,14 +24,33 @@ class CustomPromptTemplate(StringPromptTemplate):
         return self.template.format(**kwargs)
 
 
-class CustomOutputParser:
-    def parse(self, text: str) -> Union[AgentAction, AgentFinish]:
+from langchain_core.agents import AgentAction, AgentFinish, AgentOutputParser
+
+class CustomOutputParser(AgentOutputParser):
+    """Parse LLM output into AgentAction or AgentFinish (ReAct style)."""
+
+    def parse(self, text: str):           # type: ignore[override]
         if "Final Answer:" in text:
-            return AgentFinish({"output": text.split("Final Answer:")[-1].strip()}, log=text)
-        m = re.search(r"Action: (.*?)\nAction Input: ([\s\S]*)", text)
+            return AgentFinish(
+                return_values={"output": text.split("Final Answer:")[-1].strip()},
+                log=text,
+            )
+
+        m = re.search(r"Action: (.*?)\\nAction Input: ([\\s\\S]*)", text)
         if not m:
             raise ValueError(f"Cannot parse LLM output: {text}")
-        return AgentAction(tool=m.group(1).strip(), tool_input=m.group(2).strip().strip('"'), log=text)
+
+        return AgentAction(
+            tool=m.group(1).strip(),
+            tool_input=m.group(2).strip().strip('"'),
+            log=text,
+        )
+
+    # Required by AgentOutputParser
+    @property
+    def _type(self) -> str:
+        return "stock_advisor_custom"
+
 
 
 PROMPT_TEMPLATE = """You are StockSage, an AI market research assistant.
