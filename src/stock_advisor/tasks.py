@@ -6,13 +6,13 @@ _agent = create_agent()
 
 def generate_daily_brief() -> str:
     try:
-        result = _agent.invoke(
+        result = _agent.run(
             {
-                "input": "Generate today's US stock market brief."
+                "Generate today's US stock market brief."
                 # Remove 'intermediate_steps' parameter
             }
         )
-        return result["output"]
+        return result
     except Exception as exc:
         logger.error("Agent error: %s", exc)
         return "Agent failed to generate brief."
