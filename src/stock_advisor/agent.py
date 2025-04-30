@@ -5,7 +5,7 @@ from langchain.agents import ZeroShotAgent, AgentExecutor
 from langchain.chains import LLMChain
 from langchain_community.llms import AzureOpenAI
 
-from langchain_core.agents import (
+from langchain.schema import (
     AgentAction,
     AgentFinish,
     AgentOutputParser,   # ← correct location
