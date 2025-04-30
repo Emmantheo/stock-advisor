@@ -5,7 +5,6 @@ from langchain.agents import ZeroShotAgent, AgentExecutor
 from langchain.chains import LLMChain
 from langchain_community.llms import AzureOpenAI
 
-from langchain.agents import AgentAction, AgentFinish
 from langchain.agents.output_parser import AgentOutputParser   # ← correct path
 from langchain.prompts import StringPromptTemplate
 
