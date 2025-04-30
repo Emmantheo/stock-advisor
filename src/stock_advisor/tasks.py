@@ -6,14 +6,12 @@ _agent = create_agent()
 
 def generate_daily_brief() -> str:
     try:
-        result = _agent.invoke(
-            {
-                "input": "Generate today's US stock market brief.",
-                "intermediate_steps": [],   # ← add this
-            }
+        result = _agent.agent.plan(
+            {"input": "Generate today's US stock market brief."},
+            intermediate_steps=[],
         )
-        # invoke returns a dict → get the text
-        return result["output"]
+        return result.return_values["output"]
     except Exception as exc:
         logger.error("Agent error: %s", exc)
         return "Agent failed to generate brief."
+
