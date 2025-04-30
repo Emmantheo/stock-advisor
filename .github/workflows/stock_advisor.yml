@@ -62,3 +62,11 @@ jobs:
 
       - name: Run the Stock Advisor agent
         run: python -m stock_advisor.main
+
+      - name: Run the brief once (10-minute delay)
+        run: |
+          python - <<'PY'
+          from stock_advisor.scheduler import run_once_in
+          run_once_in(10)
+          PY
+
