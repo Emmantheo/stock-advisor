@@ -4,6 +4,8 @@ import schedule
 import logging
 import requests
 from stock_advisor.tasks import generate_daily_brief
+from stock_advisor.scheduler import run_once_in
+
 
 logger = logging.getLogger(__name__)
 
