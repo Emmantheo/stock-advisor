@@ -6,7 +6,7 @@ from langchain.chains import LLMChain
 from langchain_community.llms import AzureOpenAI
 
 from langchain.agents.agent import AgentOutputParser
-from langchain.prompts import StringPromptTemplate
+from langchain_core.prompts import StringPromptTemplate
 
 
 from .tools import TOOLS
@@ -30,7 +30,7 @@ def create_agent(temperature: float = 0.1) -> AgentExecutor:
     prompt = CustomPromptTemplate(
         template=PROMPT_TEMPLATE,
         tools=TOOLS,
-        input_variables=["input", "intermediate_steps"],
+        input_variables=["input", "intermediate_steps",  "agent_scratchpad"],
     )
 
     agent = ZeroShotAgent(
