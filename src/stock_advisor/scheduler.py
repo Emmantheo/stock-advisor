@@ -4,7 +4,7 @@ import schedule
 import logging
 import requests
 from stock_advisor.tasks import generate_daily_brief
-from stock_advisor.scheduler import run_once_in
+#from stock_advisor.scheduler import run_once_in
 
 
 logger = logging.getLogger(__name__)
@@ -20,23 +20,23 @@ def post_to_slack(markdown: str):
     except Exception as exc:
         logger.error("Slack error: %s", exc)
 
-def run_once_in(delay_minutes: int = 10):
-    """Run the brief exactly *delay_minutes* from now (one‑off).
+#def run_once_in(delay_minutes: int = 10):
+    #"""Run the brief exactly *delay_minutes* from now (one‑off).
 
-    Blocks until the task executes, then returns.
-    """
-    logger.info("Scheduling one‑off brief in %d minutes", delay_minutes)
-    schedule.clear()
-    schedule.every(delay_minutes).minutes.do(_run_and_post).tag("oneoff")
+    #Blocks until the task executes, then returns.
+    #"""
+    #logger.info("Scheduling one‑off brief in %d minutes", delay_minutes)
+    #schedule.clear()
+    #schedule.every(delay_minutes).minutes.do(_run_and_post).tag("oneoff")
 
-    while True:
-        if schedule.get_jobs("oneoff"):
-            schedule.run_pending()
-            time.sleep(1)
-        else:  # job done
-            break
+    #while True:
+        #if schedule.get_jobs("oneoff"):
+            #schedule.run_pending()
+            #time.sleep(1)
+        #else:  # job done
+           # break
             
-def schedule_daily(hour: int = 9, minute: int = 0):
+def schedule_daily(hour: int = 14, minute: int = 0):
     def job():
         brief = generate_daily_brief()
         post_to_slack(brief)
