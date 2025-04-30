@@ -24,7 +24,7 @@ class CustomPromptTemplate(StringPromptTemplate):
         return self.template.format(**kwargs)
 
 
-from langchain_core.agents import AgentAction, AgentFinish, AgentOutputParser
+from langchain.agents.agent import AgentOutputParser
 
 class CustomOutputParser(AgentOutputParser):
     """Parse LLM output into AgentAction or AgentFinish (ReAct style)."""
