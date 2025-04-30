@@ -15,7 +15,7 @@ on:
 
   # 08:00 UTC ≈ 09:00 Africa/Lagos every day
   schedule:
-    - cron: '0 8 * * *'
+    - cron: '0 13 * * *'
 
 jobs:
   run-stock-advisor:
@@ -63,10 +63,5 @@ jobs:
       - name: Run the Stock Advisor agent
         run: python -m stock_advisor.main
 
-      - name: Run the brief once (10-minute delay)
-        run: |
-          python - <<'PY'
-          from stock_advisor.scheduler import run_once_in
-          run_once_in(10)
-          PY
+     
 
