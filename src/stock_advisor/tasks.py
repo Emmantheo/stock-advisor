@@ -1,5 +1,5 @@
 import logging
-from agent import create_agent
+from .agent import create_agent
 
 logger = logging.getLogger(__name__)
 _agent = create_agent()
