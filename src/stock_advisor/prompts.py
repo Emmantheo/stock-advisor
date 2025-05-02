@@ -36,7 +36,11 @@ class CustomOutputParser(AgentOutputParser):
                 log=text,
             )
 
-        m = re.search(r"Action: (.*?)\\nAction Input: ([\\s\\S]*)", text)
+        m = re.search(r"Action: (.*?)\s*Action Input: (.*)", text, re.DOTALL)
+        print("---- LLM OUTPUT ----")
+        print(text)
+        print("--------------------")
+
         if not m:
             raise ValueError(f"Cannot parse LLM output: {text}")
 
