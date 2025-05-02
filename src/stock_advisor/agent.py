@@ -4,6 +4,7 @@ from typing import List
 from langchain.agents import ZeroShotAgent, AgentExecutor
 from langchain_core.runnables import RunnableSequence
 from langchain_community.llms import AzureOpenAI
+from langchain_community.llms import AzureChatOpenAI
 from langchain.chains import LLMChain  # ← restore this
 from langchain_core.prompts import StringPromptTemplate
 
@@ -12,7 +13,7 @@ from .prompts import PROMPT_TEMPLATE, CustomPromptTemplate, CustomOutputParser
 
 def _create_llm(temperature: float = 0.1) -> AzureOpenAI:
     """Instantiate an AzureOpenAI LLM using env vars for config."""
-    return AzureOpenAI(
+    return AzureChatOpenAI(
         temperature=temperature,
         azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
         azure_deployment=os.getenv("AZURE_OPENAI_COMPLETION_MODEL_NAME"),
