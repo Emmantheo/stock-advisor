@@ -15,7 +15,7 @@ def _create_llm(temperature: float = 0.1) -> AzureOpenAI:
     return AzureOpenAI(
         temperature=temperature,
         azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-        azure_deployment=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
+        azure_deployment=os.getenv("AZURE_OPENAI_COMPLETION_MODEL_NAME"),
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
         api_key=os.getenv("AZURE_OPENAI_API_KEY"),
     )
