@@ -4,6 +4,7 @@ from typing import List
 from langchain.agents import ZeroShotAgent, AgentExecutor
 from langchain_core.runnables import RunnableSequence
 from langchain_community.llms import AzureOpenAI
+from langchain.chains import LLMChain  # ← restore this
 from langchain_core.prompts import StringPromptTemplate
 
 from .tools import TOOLS
@@ -28,13 +29,13 @@ def create_agent(temperature: float = 0.1) -> AgentExecutor:
         input_variables=["input", "agent_scratchpad"],  # ✅ intermediate_steps removed
     )
 
-    # LangChain now prefers prompt | llm instead of LLMChain
-    llm_chain = prompt | llm
+    llm_chain = LLMChain(llm=llm, prompt=prompt)  # ← revert back
 
     agent = ZeroShotAgent(
         llm_chain=llm_chain,
         allowed_tools=[t.name for t in TOOLS],
         output_parser=CustomOutputParser(),
     )
+
 
     return AgentExecutor(agent=agent, tools=TOOLS, verbose=False)
