@@ -4,7 +4,7 @@ from typing import List
 from langchain.agents import ZeroShotAgent, AgentExecutor
 from langchain_core.runnables import RunnableSequence
 from langchain_community.llms import AzureOpenAI
-from langchain_community.llms import AzureChatOpenAI
+from langchain_openai import AzureChatOpenAI
 from langchain.chains import LLMChain  # ← restore this
 from langchain_core.prompts import StringPromptTemplate
 
