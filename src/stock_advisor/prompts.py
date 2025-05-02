@@ -74,7 +74,8 @@ Action: one of [{tool_names}]
 Action Input: ...
 Observation: ...
 ... (repeat)
-Thought: I now know the final answer
+If you believe you have enough information to answer, do not keep calling tools. Instead, say:
+Thought: I now know the final answer  
 Final Answer: <markdown>
 
 Question: {input}
