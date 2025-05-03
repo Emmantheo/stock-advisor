@@ -39,5 +39,5 @@ def create_agent(temperature: float = 0.1) -> AgentExecutor:
     )
 
 
-    return AgentExecutor(agent=agent, tools=TOOLS, verbose=False, max_iterations=5)
+    return AgentExecutor(agent=agent, tools=TOOLS, verbose=False, max_iterations=15)
 
