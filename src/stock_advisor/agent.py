@@ -49,14 +49,15 @@ def create_agent(temperature: float = 0.1) -> AgentExecutor:
         llm_chain=llm_chain,
         allowed_tools=[t.name for t in TOOLS],
         output_parser=CustomOutputParser(),
-        stop=["Observation:"],  # Add stop sequence
+        stop=["\nObservation:"],  # Add stop sequence
+        max_iterations=3,  # Limit iterations per tool
     )
 
     return AgentExecutor(
         agent=agent,
         tools=TOOLS,
         verbose=True,
-        max_iterations=10,  # Reduced from 15
+        max_iterations=5,  # Reduced from 15
         early_stopping_method="generate",  # Add early stopping
     )
 
