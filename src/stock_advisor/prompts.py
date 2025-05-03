@@ -4,6 +4,7 @@ from langchain.prompts import StringPromptTemplate
 from langchain.schema import AgentAction, AgentFinish
 from langchain.agents import Tool
 from typing import List, Union
+from langchain.agents.agent import AgentOutputParser
 
 
 class CustomPromptTemplate(StringPromptTemplate):
