@@ -27,23 +27,17 @@ def create_agent(temperature: float = 0.1) -> AgentExecutor:
     prompt = CustomPromptTemplate(
         template=PROMPT_TEMPLATE,
         tools=TOOLS,
-        input_variables=["input", "agent_scratchpad"],
+        input_variables=["input", "agent_scratchpad"],  # ✅ intermediate_steps removed
     )
 
-    llm_chain = LLMChain(llm=llm, prompt=prompt)
+    llm_chain = LLMChain(llm=llm, prompt=prompt)  # ← revert back
 
     agent = ZeroShotAgent(
         llm_chain=llm_chain,
         allowed_tools=[t.name for t in TOOLS],
         output_parser=CustomOutputParser(),
-        stop=["Observation:"],  # Add stop sequence
     )
 
-    return AgentExecutor(
-        agent=agent,
-        tools=TOOLS,
-        verbose=True,
-        max_iterations=10,  # Reduced from 15
-        early_stopping_method="generate",  # Add early stopping
-    )
+
+    return AgentExecutor(agent=agent, tools=TOOLS, verbose=False, max_iterations=15)
 
