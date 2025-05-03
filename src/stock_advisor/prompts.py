@@ -3,6 +3,8 @@ from datetime import datetime
 from langchain.prompts import StringPromptTemplate
 from langchain.schema import AgentAction, AgentFinish
 from langchain.agents import Tool
+from typing import List, Union
+
 
 class CustomPromptTemplate(StringPromptTemplate):
     template: str
