@@ -11,6 +11,19 @@ from langchain_core.prompts import StringPromptTemplate
 from .tools import TOOLS
 from .prompts import PROMPT_TEMPLATE, CustomPromptTemplate, CustomOutputParser
 
+import os
+import re
+from typing import List
+from langchain.agents import ZeroShotAgent, AgentExecutor
+from langchain_core.runnables import RunnableSequence
+from langchain_community.llms import AzureOpenAI
+from langchain_openai import AzureChatOpenAI
+from langchain.chains import LLMChain  # ← restore this
+from langchain_core.prompts import StringPromptTemplate
+
+from .tools import TOOLS
+from .prompts import PROMPT_TEMPLATE, CustomPromptTemplate, CustomOutputParser
+
 def _create_llm(temperature: float = 0.1) -> AzureOpenAI:
     """Instantiate an AzureOpenAI LLM using env vars for config."""
     return AzureChatOpenAI(
@@ -27,17 +40,23 @@ def create_agent(temperature: float = 0.1) -> AgentExecutor:
     prompt = CustomPromptTemplate(
         template=PROMPT_TEMPLATE,
         tools=TOOLS,
-        input_variables=["input", "agent_scratchpad"],  # ✅ intermediate_steps removed
+        input_variables=["input", "agent_scratchpad"],
     )
 
-    llm_chain = LLMChain(llm=llm, prompt=prompt)  # ← revert back
+    llm_chain = LLMChain(llm=llm, prompt=prompt)
 
     agent = ZeroShotAgent(
         llm_chain=llm_chain,
         allowed_tools=[t.name for t in TOOLS],
         output_parser=CustomOutputParser(),
+        stop=["Observation:"],  # Add stop sequence
     )
 
-
-    return AgentExecutor(agent=agent, tools=TOOLS, verbose=False, max_iterations=15)
+    return AgentExecutor(
+        agent=agent,
+        tools=TOOLS,
+        verbose=True,
+        max_iterations=10,  # Reduced from 15
+        early_stopping_method="generate",  # Add early stopping
+    )
 
