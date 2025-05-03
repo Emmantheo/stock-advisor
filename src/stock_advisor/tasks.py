@@ -6,7 +6,7 @@ agent = create_agent()
 
 def generate_daily_brief() -> str:
     try:
-        result = _agent.run(
+        result = agent.run(
             "Generate today's US stock market brief. "
             "Structure: 1) Macro summary 2) Company news 3) Trade ideas. "
             "Use each tool only once per category."
