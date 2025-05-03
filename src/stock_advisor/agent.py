@@ -12,7 +12,7 @@ from .tools import TOOLS
 from .prompts import PROMPT_TEMPLATE, CustomPromptTemplate, CustomOutputParser
 
 def create_agent(temperature: float = 0.1) -> AgentExecutor:
-    llm = _create_llm(temperature)
+    llm = create_llm(temperature)
 
     prompt = CustomPromptTemplate(
         template=PROMPT_TEMPLATE,
