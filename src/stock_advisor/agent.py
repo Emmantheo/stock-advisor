@@ -47,6 +47,3 @@ def create_agent(temperature: float = 0.1) -> AgentExecutor:
         early_stopping_method="generate",  # Add early stopping
     )
 
-
-    return AgentExecutor(agent=agent, tools=TOOLS, verbose=False, max_iterations=15)
-
