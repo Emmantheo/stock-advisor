@@ -71,7 +71,19 @@ class _MarketNewsTool:
                     )
             except Exception as exc:
                 logger.error("NewsAPI error: %s", exc)
-        return json.dumps(articles, indent=2) if articles else "[]"
+        if not articles:
+            return "No recent news found."
+
+        # Summarize as readable bullet list (max 5 headlines)
+        summary_lines = []
+        for article in articles[:5]:
+            headline = article.get("headline") or article.get("title", "No headline")
+            url = article.get("url", "")
+            source = url.split('/')[2] if url else ""
+            summary_lines.append(f"• {headline.strip()} ({source})")
+
+        return "\n".join(summary_lines) + "\nEnd of news."
+
 
 
 class StockQuoteTool:
