@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 finbert = pipeline("sentiment-analysis", model="ProsusAI/finbert")
 
 
-def sentiment_news(text: str):
+def sentiment_news(text: str) -> str:
     try:
         return json.dumps(finbert(text)[0])
     except Exception as exc:
@@ -26,17 +26,18 @@ def sentiment_news(text: str):
 class _MarketNewsTool:
     name = "market_news"
     description = (
-        "Fetch the latest 30 headlines for a ticker or topic. Returns JSON list "
-        "with headline, summary, url, datetime."
+        "Fetch a concise summary of the latest 5 headlines for a topic or stock ticker. "
+        "Outputs 5 readable bullet points with source links. Ideal for summarizing market activity."
     )
 
-    def __call__(self, query: str):
+    def __call__(self, query: str) -> str:
         api_key = os.getenv("FINNHUB_KEY")
         if not api_key:
             return "FINNHUB_KEY not set"
 
         today = dt.date.today()
         frm = today - dt.timedelta(days=3)
+
         if query.isupper() and len(query) <= 5:
             url = (
                 f"https://finnhub.io/api/v1/company-news?symbol={query}&from={frm}&to={today}&token={api_key}"
@@ -52,13 +53,13 @@ class _MarketNewsTool:
             logger.error("Finnhub error: %s", exc)
             articles = []
 
-        # Fallback to NewsAPI for breadth
+        # Fallback to NewsAPI if too few articles
         if len(articles) < 10 and os.getenv("NEWSAPI_KEY"):
-            nurl = (
-                "https://newsapi.org/v2/everything?q="
-                f"{query}&language=en&sortBy=publishedAt&pageSize=30&apiKey={os.getenv('NEWSAPI_KEY')}"
-            )
             try:
+                nurl = (
+                    "https://newsapi.org/v2/everything?q="
+                    f"{query}&language=en&sortBy=publishedAt&pageSize=30&apiKey={os.getenv('NEWSAPI_KEY')}"
+                )
                 na = requests.get(nurl, timeout=10).json().get("articles", [])
                 for art in na:
                     articles.append(
@@ -71,34 +72,36 @@ class _MarketNewsTool:
                     )
             except Exception as exc:
                 logger.error("NewsAPI error: %s", exc)
-        if not articles:
-            return "No recent news found."
 
-        # Summarize as readable bullet list (max 5 headlines)
+        if not articles:
+            return f"No recent news found for '{query}'."
+
+        # Summarize top 5 headlines
         summary_lines = []
         for article in articles[:5]:
             headline = article.get("headline") or article.get("title", "No headline")
             url = article.get("url", "")
-            source = url.split('/')[2] if url else ""
+            source = url.split("/")[2] if url else "source"
             summary_lines.append(f"• {headline.strip()} ({source})")
 
-        return "\n".join(summary_lines) + "\nEnd of news."
-
+        return f"News for '{query}':\n" + "\n".join(summary_lines) + "\nEnd of news."
 
 
 class StockQuoteTool:
     name = "stock_quote"
-    description = "Return today's OHLC for a US ticker as JSON."
+    description = (
+        "Return today's Open, High, Low, and Close (OHLC) prices for a given US stock ticker."
+    )
 
-    def __call__(self, ticker: str):
+    def __call__(self, ticker: str) -> str:
         try:
             data = yf.Ticker(ticker).history(period="1d").iloc[-1]
             return json.dumps(
                 {
-                    "open": float(data.Open),
-                    "high": float(data.High),
-                    "low": float(data.Low),
-                    "close": float(data.Close),
+                    "open": round(float(data.Open), 2),
+                    "high": round(float(data.High), 2),
+                    "low": round(float(data.Low), 2),
+                    "close": round(float(data.Close), 2),
                 }
             )
         except Exception as exc:
@@ -106,8 +109,9 @@ class StockQuoteTool:
             return "{}"
 
 
+# Register tools
 TOOLS: List[Tool] = [
     Tool(name=_MarketNewsTool.name, func=_MarketNewsTool(), description=_MarketNewsTool.description),
     Tool(name=StockQuoteTool.name, func=StockQuoteTool(), description=StockQuoteTool.description),
-    Tool(name="news_sentiment", func=sentiment_news, description="Run FinBERT sentiment on text"),
+    Tool(name="news_sentiment", func=sentiment_news, description="Run FinBERT sentiment on a news headline or sentence."),
 ]
