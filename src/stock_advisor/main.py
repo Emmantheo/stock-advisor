@@ -9,10 +9,14 @@ from .tasks import generate_daily_brief
 from .scheduler import schedule_daily
 from .slack import post_to_slack  # New import
 
-# Configure logging
+# Update your logging config at the top of main.py
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.DEBUG,  # Changed from INFO to DEBUG
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('stock_advisor.log'),  # Log to file
+        logging.StreamHandler()  # Log to console
+    ]
 )
 logger = logging.getLogger(__name__)
 
