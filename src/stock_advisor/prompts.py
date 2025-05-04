@@ -48,6 +48,7 @@ class CustomOutputParser(AgentOutputParser):
         text = re.sub(r'(Thought:|Action:|Observation:).*?$', '', text, flags=re.MULTILINE)
         return f":chart_with_upwards_trend: *Market Brief - {datetime.now().strftime('%Y-%m-%d')}*\n\n{text.strip()}\n\n_This is educational, not investment advice._"
 
+
 PROMPT_TEMPLATE = """You are StockSage, an AI market research assistant.
 Current Date: {current_date}
 
