@@ -1,4 +1,21 @@
+# Stock Advisor 🤖📈
 
+A sophisticated AI-powered market analysis tool that generates daily briefings on US stock market conditions, company news, and actionable trade ideas.
+
+## Features ✨
+
+- **Daily Market Briefings**:
+  - Macroeconomic developments
+  - Company-specific news with sentiment analysis
+  - Curated trade ideas with rationale
+- **Automated Delivery**:
+  - CLI interface for manual runs
+  - Scheduled daily reports via cron
+  - Slack integration for team distribution
+- **Intelligent Analysis**:
+  - Real-time data aggregation
+  - AI-powered sentiment scoring
+  - Context-aware recommendations
 
 ## Technical Stack 🛠️
 
