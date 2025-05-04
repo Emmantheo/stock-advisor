@@ -26,27 +26,66 @@ class CustomPromptTemplate(StringPromptTemplate):
 
 class CustomOutputParser(AgentOutputParser):
     def parse(self, text: str):
+        # Clean and normalize the text
         text = text.strip()
-        if "Final Answer:" in text:
-            final = text.split("Final Answer:")[-1].strip()
+        text = re.sub(r'\n+', '\n', text)  # Remove extra newlines
+        
+        # Check for final answer pattern
+        final_markers = [
+            "Final Answer:",
+            "Here's the market brief:",
+            "Market Brief:"
+        ]
+        
+        for marker in final_markers:
+            if marker in text:
+                content = text.split(marker)[-1].strip()
+                return AgentFinish(
+                    return_values={"output": self._format_output(content)},
+                    log=text
+                )
+        
+        # Check if this looks like a complete brief anyway
+        if all(section in text for section in ["Macroeconomic", "Company News", "Trade Ideas"]):
             return AgentFinish(
-                return_values={"output": self._format_output(final)},
-                log=text,
+                return_values={"output": self._format_output(text)},
+                log=text
             )
         
-        match = re.search(r"Action: (.*?)\s*Action Input: (.*)", text, re.DOTALL)
-        if not match:
-            raise ValueError(f"Cannot parse: {text}")
-            
-        return AgentAction(
-            tool=match.group(1).strip(),
-            tool_input=match.group(2).strip().strip('"'),
-            log=text,
+        # Handle action parsing
+        action_match = re.search(
+            r"Action:\s*(.*?)\s*\nAction Input:\s*[\"']?(.*?)[\"']?\s*(?:\n|$)", 
+            text, 
+            re.DOTALL
+        )
+        if action_match:
+            return AgentAction(
+                tool=action_match.group(1).strip(),
+                tool_input=action_match.group(2).strip(),
+                log=text
+            )
+        
+        # Fallback for unexpected formats
+        return AgentFinish(
+            return_values={"output": self._format_output(text)},
+            log=text
         )
 
     def _format_output(self, text: str) -> str:
-        text = re.sub(r'(Thought:|Action:|Observation:).*?$', '', text, flags=re.MULTILINE)
-        return f":chart_with_upwards_trend: *Market Brief - {datetime.now().strftime('%Y-%m-%d')}*\n\n{text.strip()}\n\n_This is educational, not investment advice._"
+        """Ensure consistent output formatting"""
+        # Remove any remaining action/observation artifacts
+        text = re.sub(r'^(Thought|Action|Observation):.*$', '', text, flags=re.MULTILINE)
+        text = text.strip()
+        
+        # Add header if missing
+        if not text.startswith("# Market Brief"):
+            text = f"# Market Brief - {datetime.now().strftime('%Y-%m-%d')}\n\n{text}"
+            
+        # Ensure proper closing
+        if "This is educational" not in text:
+            text += "\n\n*This is educational, not investment advice.*"
+            
+        return text
 
 
 PROMPT_TEMPLATE = """You are StockSage, an AI market research assistant.
