@@ -7,27 +7,40 @@ agent = create_agent()
 def generate_daily_brief() -> dict:
     try:
         result = agent.invoke({
-            "input": "Generate today's US market brief with: "
-                    "1) Macro summary 2) Company news 3) Trade ideas. "
-                    "Format as markdown with clear section headers."
+            "input": (
+                "Generate today's comprehensive US market brief with:\n"
+                "1) 3-5 key macroeconomic developments\n"
+                "2) Notable company news with sentiment analysis\n"
+                "3) 3 actionable trade ideas with rationale\n\n"
+                "Format as markdown with clear section headers.\n"
+                "Include specific data points and sources when available."
+            )
         })
         
-        # Ensure we always return a dict with output key
+        # Validate the output structure
         if isinstance(result, dict) and "output" in result:
-            return result
-        elif isinstance(result, str):
-            return {"output": result}
+            output = result["output"]
+            if all(section in output for section in ["Macroeconomic", "Company News", "Trade Ideas"]):
+                return result
+            else:
+                logger.warning("Incomplete brief generated")
+                return {
+                    "output": (
+                        "⚠️ Partial Market Brief\n\n"
+                        "We're experiencing partial data availability today:\n\n"
+                        f"{output}\n\n"
+                        "Our team is working to restore full service."
+                    )
+                }
         else:
-            return {"output": str(result)}
+            raise ValueError("Unexpected agent response format")
             
     except Exception as exc:
-        logger.error("Agent error: %s", exc)
-        error_msg = (
-            "⚠️ Failed to generate complete market brief. "
-            "Partial output:\n\n"
-            "1) Macro: Economic indicators show mixed signals\n"
-            "2) Companies: Data unavailable\n"
-            "3) Trades: Consult your advisor\n\n"
-            "Our team is investigating this issue."
-        )
-        return {"output": error_msg}
+        logger.error("Agent execution failed: %s", str(exc))
+        return {
+            "output": (
+                "🚨 We're unable to generate today's market brief due to a system error.\n"
+                "Our engineering team has been alerted and is working on a solution.\n\n"
+                "Please check back later or contact support for assistance."
+            )
+        }
