@@ -3,7 +3,7 @@
 A sophisticated AI-powered market analysis tool that generates daily briefings on US stock market conditions, company news, and actionable trade ideas.
 
 ## 🎥 Demo 
-[Download Video](https://github.com/Emmantheo/stock-advisor/blob/main/docs/stock-advisor-demo.mp4)
+[View Interactive Demo](https://Emmantheo.github.io/stock-advisor/demo.html)
 
 ## Features ✨
 
