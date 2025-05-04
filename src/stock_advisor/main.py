@@ -21,21 +21,39 @@ def _parse_time(s: str):
     h, m = map(int, s.split(":"))
     return h, m
 
+# Update your _generate_and_post function in main.py
 def _generate_and_post():
     """Generate brief and post to Slack, returns brief text."""
     try:
-        brief = generate_daily_brief()
+        # Generate the brief
+        result = generate_daily_brief()
+        
+        # Handle both dict and str outputs
+        brief = result.get("output") if isinstance(result, dict) else result
         logger.info("Successfully generated daily brief")
         
-        # Post to Slack
-        if post_to_slack(brief):
-            logger.info("Posted daily brief to Slack successfully")
-        else:
-            logger.warning("Failed to post to Slack (missing webhook?)")
+        # Debug: Print brief to verify content
+        logger.debug(f"Brief content: {brief[:200]}...")  # Log first 200 chars
+        
+        # Post to Slack with error handling
+        try:
+            if post_to_slack(brief):
+                logger.info("Posted daily brief to Slack successfully")
+            else:
+                logger.warning("Failed to post to Slack - check webhook configuration")
+                # Fallback: Print to console if Slack fails
+                print("Slack post failed. Brief content:")
+                print(brief)
+        except Exception as slack_error:
+            logger.error(f"Slack posting error: {str(slack_error)}")
+            raise
         
         return brief
     except Exception as e:
         logger.error(f"Error generating brief: {str(e)}")
+        # Attempt to post error to Slack
+        error_msg = "⚠️ Failed to generate market brief. Check logs for details."
+        post_to_slack(error_msg)
         raise
 
 def cli():
