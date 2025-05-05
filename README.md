@@ -4,9 +4,12 @@ A sophisticated AI-powered market analysis tool that generates daily briefings o
 
 ### 🎬 Demo Video
 
-<video width="100%" controls autoplay muted loop>
-  <source src="https://emmantheo.github.io/stock-advisor/stock-advisor-demo.mp4" type="video/mp4">
-</video>
+<p align="center">
+  <img src="https://img.youtube.com/vi/EsVdFMjr0wI/0.jpg" alt="Demo Video" width="80%">
+  <br />
+  <em>Click to watch the demo</em><br />
+  <a href="https://www.youtube.com/watch?v=EsVdFMjr0wI"><strong>▶️ Watch Video</strong></a>
+</p>
 
 
 ## Features ✨
