@@ -4,7 +4,9 @@ A sophisticated AI-powered market analysis tool that generates daily briefings o
 
 ### 🎬 Demo Video
 
-[Watch Demo on Streamable](https://streamable.com/seovjf)
+<video width="100%" controls autoplay muted loop>
+  <source src="https://emmantheo.github.io/stock-advisor/stock-advisor-demo.mp4" type="video/mp4">
+</video>
 
 
 ## Features ✨
